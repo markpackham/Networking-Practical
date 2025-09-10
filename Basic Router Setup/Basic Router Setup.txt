@@ -1,0 +1,172 @@
+Basic Router Setup
+In this lesson we are going to go through the initial setup of a router, which trust me, is more fun than it sounds.
+
+Getting Started
+Before we get into this, there is some important pieces of information that you need to know. Routers configurations are hierarchical, this means that in order to change certain parts of the configuration you need to change levels.
+
+These levels are:
+
+Enable or Privileged – This is the level at which all “show” commands are run, these commands allow you to navigate around the router and view or show information. An example of this command is show ip interface brief which will show all IP addresses associated with attached interfaces.
+
+This level is represented as a hashtag # and to get here you would type in the command enable.
+
+An example of how this is displayed on a router would be Router1#.
+
+
+
+Configure – This is the minimum level that the router can be configured at. An example configuration command would be hostname RouterNew which will change the routers name from Router1 to RouterNew.
+
+This level is represented as (config)# and to get here you will need to type configure terminal at the enable level.
+
+An example on how this would be displayed on a router would be Router1(config)#
+
+
+
+Sub-configuration menus – When configuring routers, you will be often brought to sub-configuration menus. A good example will be when you configure an interface you will be brought into that interface’s menu.
+
+This level is represented as something like (config-if)# and to get here you will need to enter a configuration command like interface ethernet0/0.
+
+An example of how this would be displayed on a router would be Router1(config-if)#
+
+
+
+To go back down a level, you will need to type in exit. To go all the way back to enable level you will need to type in end.
+
+The basic configuration
+There are a few things that are important for every time you first configure a router, these include:
+
+A hostname
+An IP Domain-name
+A local user account
+Password encryption
+Valid SSH certificate is created and SSH Turned on and that Telnet is disabled
+A loopback address
+IMPORTANT: After every major configuration step, make sure to save your work, because all changes you will have done are stored in volatile memory. To save the configuration you will need to enter the following at the enable level – Router1#write memory or you can enter the command Router1# copy running-config startup-config
+
+1. A Hostname
+A Hostname is useful for identifying a device, there is nothing worse than having access to multiple devices at the same time and not knowing which is which as this can lead to mistakes. To configure a hostname from the enable level you will need to do the following:
+
+Router1# configure terminal
+
+Router1(config)# hostname <Device Name>
+
+RouterNew(config)# end
+
+RouterNew# write memory
+
+  
+
+2. An IP Domain-name
+An IP Domain-name is used for creating self-signed SSH certificates, without creating a domain you will not be able to create a certificate to be used with SSH, so this should be one of your first steps. To configure a hostname from the enable mode you will need to do the following:
+
+Router1# configure terminal
+
+Router1(config)# ip domain-name wywm.local
+
+Router1(config)# end
+
+Router1# write memory
+
+
+
+3. A Local User Account
+A local user account is used to secure a device against unauthorised access, there are 3 methods.
+
+Creating a password that is applied on initial login.
+Creating a local user account that requires a username and password to login.
+Using an external identity source like TACACS+ or RADIUS to authenticate a user.
+We are going through the second method as it is the most secure without connecting to an external identity source. To use a local user account we must create the account and then make sure the account will be used on SSH and serial connections.
+
+Router1# configure terminal
+
+Router1(config)# username Greg privilege 15 secret Supersecretpassword1
+
+NOTE: This will be covered in later lessons, but routers have privilege levels with 15 being the highest. 15 allows you to use any command, whereas the lower levels have a restricted command set.
+
+NOTE 2: We use the word secret rather than password as the command secret makes sure that the password is encrypted.
+
+Router1(config)# line con 0
+
+NOTE 3: With this command we are entering the configuration level of the serial cable which is also know as line 0 or console, all settings edited here change the parameters around plugging a console cable directly into the router.
+
+Router1(config-line)# login local
+
+NOTE 4: With this command we are changing the authentication type from just a basic password to a local account authentication.
+
+Router1(config-line)# line vty 0-4
+
+NOTE 5: With this command we are changing the configuration of the virtual lines, virtual lines allow remote connections such as telnet and SSH, by changing the configuration here we can alter how users can remotely access the router.
+
+Router1(config-line)# login local
+
+Router1(config-line)# end
+
+Router1# write memory
+
+
+
+4. Password Encryption
+Password encryption, as the name suggests, after we enter this command, any password that was in plain text will be encrypted.
+
+Router1# configure terminal
+
+Router1(config)# service password-encryption
+
+Router1(config)# end
+
+Router1# write memory
+
+
+
+5. Valid SSH Certificate
+Valid SSH certificate is the next to be created and Telnet disabled. Telnet has been a long-time insecure means of configuring devices and is a fallback at best. The reason being is that telnet transmits everything in plain text, whereas SSH uses a tough form of encryption to secure the communication between the user and the router. To enable SSH we need to take two steps, step 1 generate the certificate, step 2 disable telnet and make sure only SSH is available.
+
+Router1# configure terminal
+
+Router1(config)# crypto key generate rsa modulus 2048
+
+NOTE: With this command we are generating a self-signed certificate that is using an RSA 2048 bit encryption
+
+Router1(config)# line vty 0 4
+
+NOTE 1: With this command we are changing the configuration of the virtual lines, virtual lines allow remote connections such as telnet and SSH, by changing the configuration here we can alter how users can remotely access the router.
+
+Router1(config-line)# transport input ssh
+
+NOTE 2: With this command we are changing the remote connection method from all methods to only permitting SSH.
+
+Router1(config-line)# end
+
+Router1# write memory
+
+
+
+6. A Loopback Address
+A Loopback address is a virtual interface, these interfaces are always available and will never go down like physical interfaces. They are important for configurations that depend on an interface being always available, like IPSec tunnels and GRE tunnels. Loopback addresses are often used for management of the router and can often be thought of as the IP address of the router. Due to the fact that they are virtual, they are created and assigned a number, this number will be usually defined by the company topology. Another important note is that loopback addresses do not connect to another IP address, so to reduce IP wastage they can have a /32 subnet or 255.255.255.255. In this example I will be using loopback number 100 and the IP address of 192.168.100.1/32.
+
+Router1# configure terminal
+
+Router1(config)# interface loopback 100
+
+Router1(config-if)# ip address 192.168.100.1 255.255.255.255
+
+Router1(config-if)# end
+
+Router1# write memory
+
+
+
+As you can see throughout this practical you are working at the different sub levels. I am now going to go through some basic show commands that will allow you to review what you have done. The best way to understand these commands is to run them and see what happens.
+
+Basic Show Commands
+Show running-config – This will display all the configuration in the volatile memory. The volatile memory is where the router is currently working from and any changes here affect the router. Without saving this volatile memory, on reboot, all changes will be gone.
+
+Show ip interface brief – This will display all the IP addresses associated with the router’s interfaces.
+
+Show interfaces – This will show the detailed statistics of all of the interfaces
+
+Show ip route – This will display all learnt routes, there is a glossary at the top to help you understand the letters next to the routes.
+
+Show ip arp – This will display the ARP table
+
+Show mac-address-table – This will display the MAC address table
