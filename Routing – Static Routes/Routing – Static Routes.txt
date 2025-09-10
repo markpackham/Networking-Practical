@@ -1,0 +1,88 @@
+Routing – Static Routes
+Welcome back to our practical lessons, in this lesson we are going to begin to learn how to communicate with the other side, using the most basic and manual form of routing, called static routes.
+
+Getting started with static routing
+The reason we will be going through static routing is that they are still used heavily today. Static routes still have merit even though they are not dynamic and network changes need to be reconfigured manually.
+
+Let’s go through some of the reasons you would use static routes:
+
+Static routing can be used to define an exit point. We can use static routing to say, “if you don’t know where you are going, then go out this interface”. This static route will often be referred to as a “default route.”
+Static routing could be used in a very small network that only requires one or two routers. Reason being is that it would be much easier to setup than dynamic routing.
+Static routing could be used as a backup for dynamic routing, or a fail-safe.
+(ADVANCED USAGE) It can be used to help routes get from one routing protocol to another, often referred to as “routing redistribution.”
+Let’s now go through a list of pros and cons
+Pros:
+
+Static routing is really light on the CPU and because its manually configured, it does not produce traffic to other networks or routers.
+Static routing cannot be interfered with, which means you have full control over the traffic.
+Static routing is super easy to configure on small networks, as you are soon to find out.
+Cons:
+
+As I keep mentioning, static routes are manually created, which means they are subject to human error.
+Static routes are unsurprisingly static, which means they are not fault tolerant, they cannot dynamically learn a new path or way of doing things.
+Static routes by default take preference over other routing protocols, so if you misconfigure or configure a routing path that would take longer than the dynamically learned route, then the data will be going on a journey.
+The management overhead grows, every time you need to add a new network.
+Getting started with static routes
+This is going to be nice and easy as static routes are entered at the global configuration stage, so no menus to jump through. Static routes are written as “who you are looking for” to “where to find them or the next router” such as – IP route [network] [netmask] [next hop].
+
+Let’s look at an example:
+
+ip route 192.168.0.0 255.255.255.0 172.16.10.1
+
+With this command we are saying that if you are looking for the network 192.168.0.0/24 then go talk to the router that can be found at 172.16.10.1.
+
+Another example explained differently! To configure static routes are – ip route <the network you want to go to> <the subnet of the network> <where you can find the network or what router is next in line and can tell you where the network is>
+
+The full command looks like:
+
+Router1# configure terminal
+
+Router1(config)# ip route 192.168.0.0 255.255.255.0 172.16.10.1
+
+Router1(config)# end
+
+Router1# write memory
+
+
+
+Adding an IP address to an interface
+
+Just like we added the IP address to the loopback interface before this will be quite similar. Firstly, you will need to find out what interface you are applying the IP address to. You will firstly need to identify what type of interface that you are configuring such as a ethernet, gigabit or fast ethernet and so on. To do this you are going to have to enter a discovery command.
+
+Router1# show ip interface brief
+
+
+
+Important things to note about the interface screen is that it can give you a quick indication of the health of the interface.
+
+Link status = Administratively down / Protocol = Down
+
+This means that the interface is in a shutdown state. This will be the default state for many interfaces not in use as it prevents someone from just plugging something in.
+
+Link status = Down / Protocol = Down
+
+Likely no cable connected
+
+Link status = Up / Protocol = Down
+
+Cable connected but a misconfiguration between devices
+
+Link status = Up / Protocol = Up
+
+Devices are connected and sending keep alives. This does not mean you have configured the right IP addresses, just that it is communicating at a layer 2 (MAC address) level.
+
+You can see in this screen shot above that the interface we are going to configure is an ethernet interface and we are going to be configuring the first ethernet port. Now that we know this information, we can add the IP address details and turn on the interface.
+
+Router1# configure terminal
+
+Router1(config)# interface ethernet 0/0
+
+Router1(config-if)# ip address 192.168.0.1 255.255.255.0
+
+Router1(config-if)# no shutdown
+
+NOTE: this command we take the interface from being administratively down or shutdown into an available state or up. Without bringing an interface up, you will not be able to see any network traffic on that interface. Shutting down interfaces is useful for security purposes where you want to disable unused ports. to shutdown an interface you just type the command – shutdown.
+
+Router1(config-if)# end
+
+Router1# write memory
