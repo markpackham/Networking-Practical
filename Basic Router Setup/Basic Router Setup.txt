@@ -93,7 +93,7 @@ Router1(config-line)# login local
 
 NOTE 4: With this command we are changing the authentication type from just a basic password to a local account authentication.
 
-Router1(config-line)# line vty 0-4
+Router1(config-line)# line vty 0 4
 
 NOTE 5: With this command we are changing the configuration of the virtual lines, virtual lines allow remote connections such as telnet and SSH, by changing the configuration here we can alter how users can remotely access the router.
 

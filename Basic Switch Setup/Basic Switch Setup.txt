@@ -1,0 +1,69 @@
+Basic Switch Setup
+
+There are two types of switches that you need to be made aware of, but firstly we need to think back and recap on the first few levels of the OSI model.
+
+Layer 1 – Physical layer where we take into account the physical connection or cabling between devices.
+
+Layer 2 – Data Link layer is the level where MAC addresses are considered. On a layer 2 data can only be passed in and amongst the same network.
+
+Layer 3 – Network layer is where routers sit as they communicate using IP addresses and can pass data in and amongst different networks.
+
+Understanding Switches
+Now back to switches. When we talk about them, we need to talk about what kind of switch it is, whether it is a layer 2 switch or a layer 3 switch.
+
+Layer 2 switches can also be referred to as a data link layer switch, use a devices MAC address to decide where to forward received data. Layer 2 switches are faster than routers because they do not take up time looking at the Network layer header. Instead they look at the data frames hardware address to decide what it should do with the frame, whether it should forward, flood or drop it.
+
+Layer 3 switches combine the functionality of both a router and a switch. It can forward data frames based on their hardware address if the hardware is in the same subnet or LAN. But it can also support routing protocols, inspect incoming packets, and even make routing decisions based on the source and destination address. This means that if we have multiple virtual LANs on a layer 3 switch, it could effectively move data between them, without needing to communicate back to a router.
+
+In this, we will only be discussing layer 2 switches as they are the switch you will more likely come across in the wild.
+
+VLANs
+Virtual LANs in essence are a collection of devices or network nodes that communicate to one another as if they we made up of a single LAN, when in reality they can span across multiple switches. Real world use cases for VLANs would be used to put certain department teams on the same VLAN to facilitate a high volume of data sharing. By putting groups such as Marketing, Sales and IT into their own VLAN groups greatly increases the security of those groups. This is achieved by limiting the number of devices in each VLAN and the fact that you cannot communicate from one VLAN to another without talking to a layer 3 device. VLANs are cost effective, offer more flexibility than traditional LAN solutions and can decrease the administrative oversight required.
+
+When configuring switches, it is important to remember that VLAN 1 is the default VLAN. By default, all switch ports are part of VLAN 1. VLAN 1 contains control plane traffic and can contain user traffic. It is recommended that user traffic be configured on VLANs other than VLAN 1, not only because it is a security issue but to prevent unnecessary user broadcast and multicast traffic from being processed by the Network Management Processor (NMP) of the supervisor.
+
+Key terminology
+A Switch port is a port on the switch.
+
+An Access port is a port of the switch that is configured for a host device, like a computer, to connect to. When defining an access port, you will also need to define what VLAN the host device will participate in as that host device will only be able to communicate to other devices in that same VLAN.
+
+A trunk port is a port that is assigned to carry traffic for all the VLANs that are accessible by a specific switch, a process known as trunking. Trunk ports mark frames with unique identifying tags – either 802.1Q tags or Inter-Switch Link (ISL) tags – as they move between switches. Therefore, every single frame can be directed to its designated VLAN. The easiest way to think of a trunk port is as a bundle of VLANs, rather than just the one.
+
+Basic switch configuration
+Unfortunately there will be no practical content at the end of this lesson as the lab will not support it.
+
+There are a number of key steps you will need to complete in order to secure and setup the switch to a basic level, these commands are the exact same as on a router so we will not be re-going over them.
+
+A hostname
+An IP Domain-name
+A local user account
+Password encryption
+Valid SSH certificate is created and SSH Turned on and Telnet disabled
+A switch is configured in much the same way you would configure a router. It has the same privilege levels as you would expect to see in in a router, and you get to them as you would expect.
+
+Enable/privileged – This is the level at which all “show” commands are run, these commands allow you to navigate around the router and view or show information like the command show ip interface brief will show all IP addresses associated with attached interfaces as well as interface state.
+
+This level is represented as a hashtag # and to get here you would type in the command enable.
+
+Configure menu – This is the minimum level that the router can be configured at. An example command would be hostname SwitchNew which will change the switches name from Switch1 to SwitchNew.
+
+This level is represented as (config)# and to get here you will need to type configure terminal at the enable level.
+
+Sub-configuration menus – When configuring switches, you will be often brought to sub-configuration menus. A good example will be when you configure an interface you will be brought into that interface’s menu.
+
+This level is represented as something like (config-if)# and to get here you will need to enter a configuration command like interface gigabit 0/0.
+
+IMPORTANT: After every major configuration step, make sure to save your work, because all changes you will have done are stored in volatile memory. To save the configuration you will need to enter the following at the enable level – Switch1#write memory
+
+As you can see throughout this learning you are working at the different sub levels. I am now going to go through some basic show commands that will allow you to review what you have done. The best way to understand these commands is to run them and see what happens.
+
+Basic show commands
+Show running configuration – This will display all the configuration in the volatile memory. The volatile memory is where the switch is currently working from and any changes here affect the switch. Without saving this volatile memory, on reboot, all changes will be gone.
+
+Show ip interface brief – This will display all the IP addresses associated with the switch’s interfaces. This will also display IP information for all VLANs associated with the device.
+
+Show interfaces – This will show the detailed statistics of all of the interfaces.
+
+Show ip arp – This will display the ARP table.
+
+Show mac-address-table – This will display the MAC address table.

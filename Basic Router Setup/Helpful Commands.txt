@@ -1,0 +1,30 @@
+Helpful commands
+Show/troubleshooting Commands (entered at the privileged/enabled level)
+
+Show ip interface brief – shows the state and IP addresses of all interfaces
+
+show ip route – displays all learnt routes
+
+show running-config – shows the current router configuration
+
+ping <IP address|hostname> – sends an ICMP packet to a particular IP address or hostname, useful for identifying if you can reach the IP address
+
+ping <IP address|hostname> source <interface name|interface IP address> – sends an ICMP packet to a particular IP address or hostname, useful for identifying if you can reach the IP address, uses the source address specified
+
+Configuration commands (must be entered at the relevant configuration level)
+
+hostname <name of router> – configures the hostname of the router
+
+ip domain-name <name of the domain> –  configures the domain on the router
+
+username <username> privilege 15 secret <password> – configures a local username and password on the router to a high privilege level
+
+service password-encryption – encrypts all passwords on the router
+
+crypto key generate RSA modulus 2048 – creates a RSA 2048 bit certificate
+
+interface <name of interface you want to configure> – allows you to go into the sub configuration level of the interface
+
+no shut down – brings an administratively down interface up (makes the interface work)
+
+ip address <ip address> <subnet> – allows you to apply an IP address to an interface
