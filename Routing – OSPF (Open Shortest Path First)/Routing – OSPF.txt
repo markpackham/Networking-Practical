@@ -1,0 +1,62 @@
+Routing – OSPF (Open Shortest Path First)
+
+Open Shortest Path First or OSPF is a dynamic routing protocol that has been in the world for many years and is supported by practically every routing vendor. OSPF is heavily used in almost every business network and is incredibly easy to setup.
+
+OSPF is designed to be an interior gateway protocol (IGP) for use in local area networks (LAN). An IGP is a type of protocol that exchanges routing information between routers and within an autonomous system, an example of an autonomous system is a corporate LAN.
+
+OSPF uses a shortest path first algorithm in order to build and calculate the cost to all known destinations. Cost is a computation done using what’s called the Djikstra’s algorithm, this algorithm is based on the predefined reference bandwidth divided by the link speed of those links.
+
+OSPF will listen to its neighbours and gather all relevant link state information to build a topology map of all available paths in its network. Link state information can include the IP address of the interface, the mask, the routers connected etc. This topology is saved as a data base, the most common name being the Link-State Database.
+
+OSPF routers participate in an election process to decide who will become the designated router (DR), this is decided based on the priority of the router-id. The designated router is in charge of generating all Link State Advertisements (LSAs) and exchanging information with all other routers in the same area. As part of the election process a Backup Designated Router (BDR) is also selected with the sole purpose of becoming the designated router should the DR fail. All other routers in the same area will form neighbour adjacencies with the DR and BDR.
+
+OSPF uses IP multi-cast flooding to exchange link-state updates from the DR to other routers. To reduce the number of link-state updates from devices that are not relevant to the router, OSPF uses Areas as a kind of boundary. Any router that wishes to participate in the link state updates or become neighbours with other routers must be in the same area/boundary. Routers that belong to multiple areas (or boundaries) and connect them to the backbone are called area border routers (ABR).
+
+Some key things we will need to discuss before hand are OSPF key terminologies, these are Process-ID and Area-ID.
+
+Area-ID: We have discussed above, but OSPF uses areas as a boundary, this is represented by a number which can range from 0 (an area backbone) to 4294967295.
+
+Process-ID: When configuring OSPF, a process-id is used as an identifier for local OSPF process. Different OSPF process IDs would need to be used if multiple OSPF processes were being run on the same device. Best practice and for visual ease, it is best to keep the process-ID and the area-ID the same.
+
+Getting started
+Now that we got the theory out of the way, let’s move into how to get this done on a Cisco router. To get into the routing command line we need to change to the OSPF routing sub menu.
+
+In this example command you will need to replace <process-ID> with a meaningful number, best policy would say that this number should be the same as your area-id
+
+Router1# configure terminal
+
+Router1(config)# router ospf <process-ID>
+
+Router1(config-router)#
+
+
+
+OSPF needs to have the networks it should pass on defined, or advertised and this is done through network statements. Network statements can be done in two ways, I will first go through the most common method and then the lessor known. During the first method you will need to make sure you advertise all of your routers networks, this includes all link addresses and loopback addresses.
+
+First method:
+In this example command you will need to replace <network address> and <network mask> with the network address and subnet of all of the networks associated with the router, this includes loopback addresses. You will also need to replace the <area-ID> with the area-id dictated to you by the topology.
+
+Router1# configure terminal
+
+Router1(config)# router ospf <process-ID>
+
+Route1(config-router)# network <network address> <network mask> area <area-ID>
+
+
+
+Second method:
+Router1# configure terminal
+
+Router1(config)# interface ethernet 0/0
+
+Router1(config-if)# ip ospf <area-ID> area <process-ID>
+
+
+
+Helpful commands
+
+Show ip route – Shows a list of all learned and manual routes in the router
+
+Show ip ospf interface – Shows detailed information about the interface OSPF is running on.
+
+Show ip ospf neighbour – Shows a list of OSPF neighbours and details their various states.

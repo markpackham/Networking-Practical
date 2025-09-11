@@ -10,6 +10,7 @@ Static routing can be used to define an exit point. We can use static routing to
 Static routing could be used in a very small network that only requires one or two routers. Reason being is that it would be much easier to setup than dynamic routing.
 Static routing could be used as a backup for dynamic routing, or a fail-safe.
 (ADVANCED USAGE) It can be used to help routes get from one routing protocol to another, often referred to as “routing redistribution.”
+
 Let’s now go through a list of pros and cons
 Pros:
 
