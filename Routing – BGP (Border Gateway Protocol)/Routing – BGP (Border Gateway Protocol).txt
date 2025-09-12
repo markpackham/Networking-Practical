@@ -1,0 +1,50 @@
+Routing – BGP (Border Gateway Protocol) for AS (autonomous systems)
+
+The Border Gateway Protocol or BGP is the routing protocol of the internet. Not only this, but it is used heavily in corporate organisations for where they need to connect to the internet through their internet service provider or when they connect from one remote site to another. Due to its variety of uses, it is an incredibly important routing protocol, which is why we are now going to go through it.
+
+BGP is a path-vector protocol that provides routing information for autonomous systems via its AS-Path attribute. A path-vector protocol is a network routing protocol which maintains the path information it receives dynamically. It is different from distance vector and link state routing protocols as the routing table contains the destination network, the next router and the path to reach the destination.
+
+In BGP the routers send path-vector messages to advertise the reachability of their networks. Each router that receives a path vector message must verify the advertised path according to its policy. If the message complies with its policy, the router modifies its routing table accordingly and sends it on to the next neighbour.
+
+Firstly, let’s understand a key terminology in BGP, autonomous system or AS. In BGP, each routing domain is known as an autonomous system and each one must be unique in order to not break the internet, these will often be issued by a central governing body. When choosing a routing path, BGP will choose a route that traverses the least number of autonomous systems which is considered the shortest AS path.
+
+Unlike OSPF there is no discovery phase, which means the router does not seek out routing neighbours. In BGP you must manually configure your neighbours and they must configure you as their neighbour in order to pass routing information.
+
+Commands
+This command allows you to enter the BGP configuration menu
+
+In this example command you will need to replace <AS number> with the number dictated to you by the topology.
+
+Router1# configure terminal
+
+Router1(config)# router bgp <AS number>
+
+Router1(config-router)#
+
+
+
+Defining a neighbour
+This command allows you to define who your neighbour is and what their AS number is.
+
+In this example command you will need to replace <neighbor IP> with the next hop IP address. You will also need to change <neighbor’s AS number> to the number dictated to you in the topology.
+
+Router1# configure terminal
+
+Router1(config)# router bgp <AS number>
+
+Router1(config-router)# neighbor <neighbor IP> remote-as <neighbor’s AS number>
+
+NOTE: It is important to remember that Cisco is an American company and therefor will only accept neighbour statements if spelt neighbor.
+
+Router1(config-router)#
+
+
+
+Advertising a network
+Router1# configure terminal
+
+Router1(config)# router bgp <AS number>
+
+Router1(config-router)# network <network ip> mask <subnet mask>
+
+Router1(config-router)#
